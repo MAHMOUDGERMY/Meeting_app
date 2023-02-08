@@ -20,8 +20,6 @@ void main() async {
   Future<PermissionStatus> permissionStatus =
       NotificationPermissions.getNotificationPermissionStatus();
 
-
-
   final fcmToken = await FirebaseMessaging.instance.getToken();
   print("token : $fcmToken");
 
@@ -41,27 +39,22 @@ void main() async {
   );
 
   FirebaseMessaging.onMessageOpenedApp.listen(
-    (event) {
+    (event) async {
       print(event.data["room_name"]);
-      AuthMethods  _authMethod = AuthMethods();
+      AuthMethods _authMethod = AuthMethods();
       JitsiMeetMethods _jitsiMeetMethods = JitsiMeetMethods();
-      try{
+      try {
         print(event.data.values.first);
-
-
 
         _jitsiMeetMethods.createMeeting(
           roomName: event.data.values.first,
           isAudioMuted: true,
           isVideoMuted: true,
-          username:_authMethod.user.displayName! ,
+          username: _authMethod.user.displayName!,
         );
-      }catch(on){
+      } catch (on) {
         print("error $on");
       }
-
-
-
     },
   );
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);

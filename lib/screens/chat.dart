@@ -67,7 +67,8 @@ class _ChatState extends State<Chat> {
   Future<http.Response> sendNotificationToToken(
       {String? token, String? title, String? body}) async {
     const String FCM_ENDPOINT = 'https://fcm.googleapis.com/fcm/send';
-    const String FCM_SERVER_KEY = 'AAAAiWvLF3g:APA91bG0Hsu5tqbIvpmBiEErwpENL3_zt8LZSpjYsz8uLPU3mECpcNZMLC-uanqy6JJJiYhZcDA9CNC7splJk9Wsc9ECQ-WpPqw2XeJfdbsK_gyJXH8dVVrVKfumupA0aP74V2HzjEEi';
+    const String FCM_SERVER_KEY =
+        'AAAAiWvLF3g:APA91bG0Hsu5tqbIvpmBiEErwpENL3_zt8LZSpjYsz8uLPU3mECpcNZMLC-uanqy6JJJiYhZcDA9CNC7splJk9Wsc9ECQ-WpPqw2XeJfdbsK_gyJXH8dVVrVKfumupA0aP74V2HzjEEi';
     final data = {
       "to": "$token",
       "notification": {
@@ -82,8 +83,10 @@ class _ChatState extends State<Chat> {
       'Authorization': 'key=$FCM_SERVER_KEY',
     };
 
-    return await http.post(Uri.parse(FCM_ENDPOINT), body: json.encode(data), headers: headers);
+    return await http.post(Uri.parse(FCM_ENDPOINT),
+        body: json.encode(data), headers: headers);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,26 +187,29 @@ class _ChatState extends State<Chat> {
                   //         color: Colors.blue,
                   //       )),
                   // ),
-                   if (text == true)
-                  SizedBox(
-                    height: 65,
-                    child: MaterialButton(
-                        color: Colors.grey,
-                        onPressed: () {
-                          sendMessage(
-                              text: textCon.text,
-                              reciverId: widget.userData["uid"],
-                              dateTime: Timestamp.now());
-                          sendNotificationToToken(token:widget.userData["token"] , title: _authMethods.user.displayName , body: textCon.text );
-                          textCon.clear();
-                        },
-                        minWidth: 1.0,
-                        child: const Icon(
-                          Icons.send,
-                          size: 16,
-                          color: Colors.blue,
-                        )),
-                  )
+                  if (text == true)
+                    SizedBox(
+                      height: 65,
+                      child: MaterialButton(
+                          color: Colors.grey,
+                          onPressed: () async {
+                            sendMessage(
+                                text: textCon.text,
+                                reciverId: widget.userData["uid"],
+                                dateTime: Timestamp.now());
+                            await sendNotificationToToken(
+                                token: widget.userData["token"],
+                                title: _authMethods.user.displayName,
+                                body: textCon.text);
+                            textCon.clear();
+                          },
+                          minWidth: 1.0,
+                          child: const Icon(
+                            Icons.send,
+                            size: 16,
+                            color: Colors.blue,
+                          )),
+                    )
                 ],
               ),
             )
